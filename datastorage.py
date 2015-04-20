@@ -11,7 +11,7 @@ class Datastorage():
         f = lambda: ''.join([random.choice('0123456789ABCDEF') for _ in range(4)])
         for i in range(length):
             self.memory.insert({'data': f()})
-    #        self.printstoragestat()
+    #       self.printstoragestat()
 
     def printstorage(self):
         for _ in self.memory:
