@@ -25,4 +25,7 @@ class Process():
         plt.show()
 
     def popadress(self):
-        return self.adress.pop()
+        try:
+            return self.adress.pop()
+        except IndexError:
+            return -1

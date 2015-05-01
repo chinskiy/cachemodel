@@ -17,6 +17,19 @@ class Processmanager():
 
     def create_process(self):
         self.proc.append(process.Process(self.memlimit))
+        print("new proc")
 
     def makestep(self):
-        self.controller.makestep(self.proc[0].popadress())
+        addr = self.proc[0].popadress()
+        if addr == -1:
+            self.proc.pop()
+            self.create_process()
+            addr = self.proc[0].popadress()
+        return self.controller.makestep(addr)
+
+    def setcountmakestep(self, count):
+        cachehit = 0
+        for _ in range(count):
+            cachehit += self.makestep()
+        print("Cachehit =", str(cachehit).rjust(7), str(round(cachehit * 100 / count, 2)).rjust(8) + "%")
+        print("Cachemiss =", str(count - cachehit).rjust(6))
