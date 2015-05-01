@@ -1,4 +1,5 @@
 import numpy as np
+import matplotlib.pyplot as plt
 import random
 
 
@@ -17,7 +18,11 @@ class Process():
         print("adress count ", len(self.adress))
         print("min adress ", min(self.adress))
         print("max adress ", max(self.adress))
-        print("average ", sum(self.adress)/len(self.adress))
+        print("average ", round(sum(self.adress)/len(self.adress)))
+
+    def plotprocesshist(self):
+        plt.hist(self.adress, bins=self.memlimit/100, range=(0, self.memlimit))
+        plt.show()
 
     def popadress(self):
         return self.adress.pop()

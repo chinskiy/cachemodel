@@ -1,16 +1,29 @@
+import datastorage
+
+
 class Cachemem():
     def __init__(self, len):
-        self.mem1 = [[[_], [0] * 2] for _ in range(len)]
+        self.mem = [[[_], [0] * 2] for _ in range(len)]
+        self.ds = datastorage.Datastorage()
 
     def addmem(self, index, adress):
-        self.mem1[index][1] = [adress['id'], adress['data']]
+        self.mem[index][1] = [adress['id'], adress['data']]
+
+    def addmemfromds(self, index, adress):
+        data = self.ds.returndata(adress)
+        self.mem[index][1] = [data['id'], data['data']]
 
     def printmem(self):
-        print(self.mem1)
-        for _ in range(len(self.mem1)):
-            for __ in range(len(self.mem1[1])):
-                print(self.mem1[_][__], end='  ')
+        for _ in range(len(self.mem)):
+            for __ in range(len(self.mem[1])):
+                print(self.mem[_][__], end='  ')
             print('')
 
     def popmem(self, index):
-        self.mem1[index][1] = [0, 0]
+        self.mem[index][1] = [0, 0]
+
+    def findindexaddr(self, adress):
+        for _ in range(len(self.mem)):
+            if self.mem[_][1][0] == adress:
+                return _
+        return -1

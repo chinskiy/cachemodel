@@ -4,21 +4,18 @@ import process
 import processmanager
 import process
 
-db = datastorage.Datastorage()
 #db.makedata(1005508)
 #8 * 1024 * 128
+db = datastorage.Datastorage()
 #db.printstoragestat()
-#print(db.returndata(3))
-#
-# cm = cachestorage.Cachemem(5)
-# cm.addmem(3, db.returndata(3))
-#
-# cm.printmem()
 
-prmngr = processmanager.Processmanager(db.returnstoragelen())
-prmngr.create_process()
-print(prmngr.memlimit)
-prmngr.proc[0].returnadressstat()
+cm = cachestorage.Cachemem(6)
+cm.addmem(4, db.returndata(5))
+cm.addmemfromds(4, 5)
+cm.printmem()
+print(cm.findindexaddr(3))
 
-# proc = process.Process(db.returnstoragelen())
-# proc.returnadressstat()
+
+# prmngr = processmanager.Processmanager(db.returnstoragelen(), 'lru', 128)
+# prmngr.makestep()
+
