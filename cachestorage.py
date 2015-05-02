@@ -12,7 +12,7 @@ class Cachemem():
 
     def addmemfromds(self, index, adress):
         data = self.ds.returndata(adress)
-        self.memid[index], self.memdata[index] = data['id'], data['data']
+        self.memid[index], self.memdata[index] = data[0], data[1]
 
     def printmem(self):
         for _ in range(self.len):
