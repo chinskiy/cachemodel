@@ -1,21 +1,18 @@
 import process
-from controller import lru, mru, lfu
+from controller import lru, mru, lfu, slru, rl
 
 
 class Processmanager():
     # only 1 process
     def __init__(self, memlimit, controller, lencache):
-        self.memlimit = memlimit
+        self.memlimit, self.lencache = memlimit, lencache
         self.proc = []
-        if controller == "lru":
-            self.controller = lru.LRU(lencache)
-        elif controller == "mru":
-            self.controller = mru.MRU(lencache)
-        elif controller == "lfu":
-            self.controller = lfu.LFU(lencache)
-        else:
-            raise Exception("Choose alg")
-        self.create_process()
+        try:
+            self.controller = eval(controller + "." + controller.upper() + "(self.lencache)")
+            self.create_process()
+        except NameError:
+            print("Wrong controller name")
+            quit()
 
     def create_process(self):
         self.proc.append(process.Process(self.memlimit))
