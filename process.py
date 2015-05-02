@@ -10,7 +10,8 @@ class Process():
         magicnumber = 2
         # big - 2, medium - 4, small - 8
         adresscount = round(np.random.normal(self.memlimit / magicnumber, self.memlimit / (magicnumber * 6)))
-        medium = random.randint(self.memlimit // (magicnumber * 4), self.memlimit - (self.memlimit // (magicnumber * 4)))
+        medium = random.randint(self.memlimit // (magicnumber * 4),
+                                self.memlimit - (self.memlimit // (magicnumber * 4)))
         for _ in range(adresscount):
             self.adress.append(round(np.random.normal(medium, self.memlimit / (magicnumber * 4 * 6))))
 
@@ -18,10 +19,10 @@ class Process():
         print("adress count ", len(self.adress))
         print("min adress ", min(self.adress))
         print("max adress ", max(self.adress))
-        print("average ", round(sum(self.adress)/len(self.adress)))
+        print("average ", round(sum(self.adress) / len(self.adress)))
 
     def plotprocesshist(self):
-        plt.hist(self.adress, bins=self.memlimit/100, range=(0, self.memlimit))
+        plt.hist(self.adress, bins=self.memlimit / 100, range=(0, self.memlimit))
         plt.show()
 
     def popadress(self):

@@ -1,5 +1,5 @@
 import process
-from controller import lru, mru
+from controller import lru, mru, lfu
 
 
 class Processmanager():
@@ -11,8 +11,10 @@ class Processmanager():
             self.controller = lru.LRU(lencache)
         elif controller == "mru":
             self.controller = mru.MRU(lencache)
+        elif controller == "lfu":
+            self.controller = lfu.LFU(lencache)
         else:
-            print("Choose alg")
+            raise Exception("Choose alg")
         self.create_process()
 
     def create_process(self):
