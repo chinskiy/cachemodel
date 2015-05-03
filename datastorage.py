@@ -16,14 +16,14 @@ class Datastorage():
         for i in range(length):
             self.cursor.execute("INSERT INTO Datastorage(DATA)  VALUES('" + f() + "')")
         self.conn.commit()
-        print(self.returnstoragelen())
+        print(self.__len__())
 
     def printstorage(self):
         for _ in self.cursor.execute('SELECT * FROM Datastorage'):
             print(_[0], "  ", _[1])
 
     def returndata(self, adress):
-        return self.cursor.execute('SELECT * FROM Datastorage WHERE ID=' + str(adress) + ' ').fetchall()[0]
+        return self.cursor.execute('SELECT ID FROM Datastorage WHERE ID=' + str(adress) + ' ').fetchall()[0]
 
     def printstoragestat(self):
         self.cursor.execute('SELECT * FROM Datastorage')
@@ -34,7 +34,7 @@ class Datastorage():
         self.cursor.execute('SELECT COUNT(*) FROM Datastorage')
         print("dblen: ", self.cursor.fetchall()[0][0])
 
-    def returnstoragelen(self):
+    def __len__(self):
         self.cursor.execute('SELECT COUNT(*) FROM Datastorage')
         return self.cursor.fetchall()[0][0]
 
@@ -43,4 +43,5 @@ class Datastorage():
         self.conn.commit()
 
     def __del__(self):
+        self.conn.commit()
         self.conn.close()
