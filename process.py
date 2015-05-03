@@ -5,9 +5,11 @@ import random
 
 class Process():
     def __init__(self, memlimit):
+        random.seed(1)
+        np.random.seed(1)
         self.memlimit = memlimit
         self.adress = []
-        magicnumber = 2
+        magicnumber = 8
         # big - 2, medium - 4, small - 8
         adresscount = round(np.random.normal(self.memlimit / magicnumber, self.memlimit / (magicnumber * 6)))
         medium = random.randint(self.memlimit // (magicnumber * 4),

@@ -1,3 +1,4 @@
 class Datastorage():
-    def returndata(self, adress):
+    @staticmethod
+    def returndata(adress):
         return adress
