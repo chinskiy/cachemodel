@@ -1,12 +1,13 @@
 import cachestorage
 import random
+import numpy as np
 
 
 class LFU():
     def __init__(self, lencache):
         self.cachestorage = cachestorage.Cachemem(lencache)
         self.start, self.lencache = 0, lencache
-        self.cachefreq = [0 for _ in range(lencache)]
+        self.cachefreq = np.asarray([0 for _ in range(lencache)])
 
     def makestep(self, adress):
         index = self.cachestorage.findindexaddr(adress)
@@ -20,7 +21,7 @@ class LFU():
                 return 1
         else:
             if index == -1:
-                ind = random.choice([i for i, x in enumerate(self.cachefreq) if x == min(self.cachefreq)])
+                ind = random.choice(np.where(self.cachefreq == np.min(self.cachefreq))[0])
                 self.cachestorage.addmemfromds(ind, adress)
                 self.cachefreq[ind] = 0
                 return 0

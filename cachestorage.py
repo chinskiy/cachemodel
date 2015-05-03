@@ -1,10 +1,12 @@
 import datastorage
+import numpy as np
 
 
 class Cachemem():
     def __init__(self, length):
         self.len = length
-        self.memid, self.memdata = [0 for _ in range(length)], [0 for _ in range(length)]
+        self.memid = np.asarray([0 for _ in range(length)], dtype=np.int)
+        self.memdata = np.asarray([0 for _ in range(length)], dtype=(np.str, 5))
         self.ds = datastorage.Datastorage()
 
     def addmem(self, index, adress):
@@ -22,7 +24,5 @@ class Cachemem():
         self.memid[index], self.memdata[index] = 0, 0
 
     def findindexaddr(self, adress):
-        try:
-            return self.memid.index(adress)
-        except ValueError:
-            return -1
+        res = np.where(self.memid == adress)[0]
+        return res[0] if len(res) != 0 else -1
