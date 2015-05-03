@@ -1,5 +1,5 @@
 import process
-from controller import lru, mru, lfu, slru, rl
+from controller import lru, mru, lfu, slru, fifo, rl
 
 
 class Processmanager():
@@ -16,7 +16,6 @@ class Processmanager():
 
     def create_process(self):
         self.proc.append(process.Process(self.memlimit))
-        print("new proc")
 
     def makestep(self):
         addr = self.proc[0].popadress()

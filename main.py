@@ -1,21 +1,40 @@
 import datastorage
-import cachestorage
-import process
+import time
 import processmanager
-import process
 
-#db.makedata(1005508)
-#8 * 1024 * 128
+
+def testall(cach, numb):
+    t1 = time.time()
+    print("lru")
+    prmngr1 = processmanager.Processmanager(len(db), "lru", cach)
+    prmngr1.setcountmakestep(numb)
+    print(time.time() - t1)
+
+    t1 = time.time()
+    print("mru")
+    prmngr2 = processmanager.Processmanager(len(db), "mru", cach)
+    prmngr2.setcountmakestep(numb)
+    print(time.time() - t1)
+
+    t1 = time.time()
+    print("lfu")
+    prmngr3 = processmanager.Processmanager(len(db), "lfu", cach)
+    prmngr3.setcountmakestep(numb)
+    print(time.time() - t1)
+
+    t1 = time.time()
+    print("fifo")
+    prmngr4 = processmanager.Processmanager(len(db), "fifo", cach)
+    prmngr4.setcountmakestep(numb)
+    print(time.time() - t1)
+
+
+
+# 8 * 1024 * 128
 db = datastorage.Datastorage()
-#db.printstoragestat()
+# db.printstoragestat()
 
-cm = cachestorage.Cachemem(6)
-cm.addmem(4, db.returndata(5))
-cm.addmemfromds(4, 5)
-cm.printmem()
-print(cm.findindexaddr(3))
+cach = 1000
+numb = 1000000
 
-
-# prmngr = processmanager.Processmanager(db.returnstoragelen(), 'lru', 128)
-# prmngr.makestep()
-
+testall(cach, numb)
