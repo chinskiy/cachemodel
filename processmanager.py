@@ -25,9 +25,15 @@ class Processmanager():
             addr = self.proc[0].popadress()
         return self.controller.makestep(addr)
 
-    def setcountmakestep(self, count):
+    def setcountmakestepstat(self, count):
         cachehit = 0
         for _ in range(count):
             cachehit += self.makestep()
         print("Cachehit =", str(cachehit).rjust(7), str(round(cachehit * 100 / count, 2)).rjust(8) + "%")
-        print("Cachemiss =", str(count - cachehit).rjust(6))
+        print("Cachemiss =", str(count - cachehit).rjust(7), str(round((count-cachehit) * 100/count, 2)).rjust(8) + "%")
+
+    def setcountmakestephit(self, count):
+        cachehit = 0
+        for _ in range(count):
+            cachehit += self.makestep()
+        return cachehit
