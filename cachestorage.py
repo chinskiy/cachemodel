@@ -14,8 +14,8 @@ class Cachemem():
         for _ in range(self.len):
             print(_, "", self.memid[_])
 
-    def nullmem(self, index):
-        self.memid[index] = 0
+    def nullmem(self, adress):
+        self.memid[np.where(self.memid == adress)[0][0]] = 0
 
     def findindexaddr(self, adress):
         res = np.where(self.memid == adress)[0]
