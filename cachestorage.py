@@ -2,7 +2,7 @@ import datastorage
 import numpy as np
 
 
-class Cachemem():
+class Cachemem:
     def __init__(self, length):
         self.len = length
         self.memid = np.asarray([0 for _ in range(length)], dtype=np.int)

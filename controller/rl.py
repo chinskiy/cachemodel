@@ -1,6 +1,6 @@
 import cachestorage
 
 
-class RL():
+class RL:
     def __init__(self, lencache):
         pass

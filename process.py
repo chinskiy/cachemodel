@@ -3,10 +3,8 @@ import matplotlib.pyplot as plt
 import random
 
 
-class Process():
+class Process:
     def __init__(self, memlimit):
-        random.seed(1)
-        np.random.seed(1)
         self.memlimit = memlimit
         self.adress = []
         magicnumber = 4
