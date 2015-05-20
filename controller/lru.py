@@ -2,7 +2,7 @@ import cachestorage
 import numpy as np
 
 
-class LRU():
+class LRU:
     def __init__(self, lencache):
         self.cachestorage = cachestorage.Cachemem(lencache)
         self.start, self.lencache = 0, lencache

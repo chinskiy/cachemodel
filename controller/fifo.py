@@ -1,7 +1,7 @@
 import cachestorage
 
 
-class FIFO():
+class FIFO:
     def __init__(self, lencache):
         self.cachestorage = cachestorage.Cachemem(lencache)
         self.lencache = lencache

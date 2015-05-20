@@ -2,7 +2,7 @@ import controller.lru as lru
 import numpy as np
 
 
-class SLRU():
+class SLRU:
     def __init__(self, lencache):
         self.segment = [lru.LRU(lencache // 2), lru.LRU(lencache // 2)]
 
