@@ -1,68 +1,76 @@
 import cachestorage
 import numpy as np
 import random
-import copy
 
 class RL:
-    def __init__(self, lencache, epsilon=0.2, alpha=0.2, gamma=0.9):
+    def __init__(self, lencache, epsilon=0.1, alpha=0.2, gamma=0.9):
         self.cachestorage = cachestorage.Cachemem(lencache)
         self.start, self.lencache = 0, lencache
         self.epsilon, self.alpha, self.gamma = epsilon, alpha, gamma
-        self.actions = np.array([_ for _ in range(lencache)])
-        self.stateold, self.actionold = '0', '0'
-        self.cachefreq, self.cacheused = [0 for _ in range(lencache)], np.asarray([0 for _ in range(lencache)])
+        self.actions, self.stateold, self.statenew, self.actionold = np.array(["lru", "lfu"]), '0', '0', '0'
+        self.cachefreq = np.asarray([0 for _ in range(lencache)])
+        self.cacheused = np.asarray([0 for _ in range(lencache)])
         self.q = {}
-        self.reward = 0
+        self.reward, self.hitrate, self.missrate = 0, 0, 0
+        self.statistic = [0, 0]
 
     def makestep(self, adress):
         index = self.cachestorage.findindexaddr(adress)
         if self.start < self.lencache:
             if index == -1:
                 self.cachestorage.addmemfromds(self.start, adress)
-                # self.cacheused += 1
-                # self.cacheused[self.start] = 0
+                self.cacheused += 1
+                self.cacheused[self.start] = 0
                 self.start += 1
                 return 0
             else:
-                # self.cacheused += 1
-                # self.cacheused[index] = 0
-                # self.cachefreq[index] += 1
+                self.cacheused += 1
+                self.cacheused[index] = 0
+                self.cachefreq[index] += 1
                 return 1
         else:
             if index == -1:
-                tmp = copy.deepcopy(self.cachestorage.memid)
-                np.append(tmp, adress)
-                tmp.sort()
+                self.statenew = tuple([self.hitrate, self.missrate])
+
                 if self.stateold != '0':
-                    self.learn(self.stateold, self.actionold, self.reward, tuple(tmp))
+                    self.learn(self.stateold, self.actionold, self.reward, self.statenew)
+                action = self.choose_action(self.statenew)
+                if action == "lru":
+                    maxind = np.where(self.cacheused == np.max(self.cacheused))[0][0]
+                    self.statistic[0] += 1
+                else:
+                    ind = np.where(self.cachefreq == np.min(self.cachefreq))[0]
+                    maxind = np.where(self.cacheused == np.max(self.cacheused[ind]))[0][0]
+                    self.statistic[1] += 1
+                self.cachestorage.addmemfromds(maxind, adress)
 
-                action = self.choose_action(tuple(tmp), 0)
-                self.cachestorage.addmemfromds(action, adress)
+                self.cacheused += 1
+                self.cacheused[maxind] = 0
+                self.cachefreq[maxind] = 0
 
-                # self.cachefreq[action] = 0
-                # self.cacheused += 1
-                # self.cacheused[action] = 0
-                tmp = copy.deepcopy(self.cachestorage.memid)
-                np.append(tmp, adress)
-                tmp.sort()
+                self.stateold, self.actionold = self.statenew, action
 
-                self.stateold, self.actionold = tuple(tmp), action
+                self.hitrate = 0
+                self.missrate += 1
 
-                self.reward = 0
+                self.reward = -2
+                print(self.statistic)
                 return 0
             else:
-                # self.cachefreq[index] += 1
-                # self.cacheused += 1
-                # self.cacheused[index] = 0
-                self.reward += 2
+                self.cacheused += 1
+                self.cacheused[index] = 0
+                self.cachefreq[index] += 1
+                self.hitrate += 1
+                self.missrate = 0
+
+                self.reward += 1
                 return 1
 
-    def choose_action(self, state, noact=1):
+    def choose_action(self, state):
         if random.random() < self.epsilon:
-            action = random.choice(self.actions) if noact != 0 else random.choice(self.actions[:-1])
+            action = random.choice(self.actions)
         else:
             q = [self.getQ(state, a) for a in self.actions]
-            #print(q)
             maxq = max(q)
             if q.count(maxq) > 1:
                 best = [i for i in range(len(self.actions)) if q[i] == maxq]
@@ -85,12 +93,3 @@ class RL:
             self.q[(state, action)] = reward
         else:
             self.q[(state, action)] = oldv + self.alpha * (value - oldv)
-
-
-# q = RL(3)
-# q.makestep(1)
-# q.makestep(2)
-# q.makestep(3)
-# q.makestep(3)
-#
-# q.choose_action(tuple([0,0,1]))
