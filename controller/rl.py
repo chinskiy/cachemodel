@@ -3,7 +3,7 @@ import numpy as np
 import random
 
 class RL:
-    def __init__(self, lencache, epsilon=0.1, alpha=0.2, gamma=0.9):
+    def __init__(self, lencache, epsilon=0.1, alpha=0.2, gamma=0.8):
         self.cachestorage = cachestorage.Cachemem(lencache)
         self.start, self.lencache = 0, lencache
         self.epsilon, self.alpha, self.gamma = epsilon, alpha, gamma
@@ -32,9 +32,14 @@ class RL:
             if index == -1:
                 self.statenew = tuple([self.hitrate, self.missrate])
 
-                if self.stateold != '0':
-                    self.learn(self.stateold, self.actionold, self.reward, self.statenew)
+                # if self.stateold != '0':
+                #     self.learnQ(self.stateold, self.actionold, self.reward, self.statenew)
+                # action = self.choose_action(self.statenew)
+
                 action = self.choose_action(self.statenew)
+                if self.actionold != '0':
+                    self.learnSARSA(self.stateold, self.actionold, self.reward, self.statenew, action)
+
                 if action == "lru":
                     maxind = np.where(self.cacheused == np.max(self.cacheused))[0][0]
                     self.statistic[0] += 1
@@ -53,8 +58,8 @@ class RL:
                 self.hitrate = 0
                 self.missrate += 1
 
-                self.reward = -2
-                print(self.statistic)
+                self.reward = -1
+                #print(self.statistic)
                 return 0
             else:
                 self.cacheused += 1
@@ -63,7 +68,7 @@ class RL:
                 self.hitrate += 1
                 self.missrate = 0
 
-                self.reward += 1
+                self.reward += 2
                 return 1
 
     def choose_action(self, state):
@@ -83,13 +88,18 @@ class RL:
     def getQ(self, state, action):
         return self.q.get((state, action), 0.0)
 
-    def learn(self, state1, action1, reward, state2):
+    def learnQ(self, state1, action1, reward, state2):
         maxqnew = max([self.getQ(state2, a) for a in self.actions])
-        self.learnQ(state1, action1, reward, reward + self.gamma*maxqnew)
-
-    def learnQ(self, state, action, reward, value):
-        oldv = self.q.get((state, action), 0)
-        if oldv is None:
-            self.q[(state, action)] = reward
+        oldvalue = self.q.get((state1, action1), 0)
+        if oldvalue is None:
+            self.q[(state1, action1)] = reward
         else:
-            self.q[(state, action)] = oldv + self.alpha * (value - oldv)
+            self.q[(state1, action1)] = oldvalue + self.alpha * (reward + self.gamma * maxqnew - oldvalue)
+
+    def learnSARSA(self, state1, action1, reward, state2, action2):
+        maxqnew = self.getQ(state2, action2)
+        oldvalue = self.q.get((state1, action1), 0)
+        if oldvalue is None:
+            self.q[(state1, action1)] = reward
+        else:
+            self.q[(state1, action1)] = oldvalue + self.alpha * (reward + self.gamma * maxqnew - oldvalue)
