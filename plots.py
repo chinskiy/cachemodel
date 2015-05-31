@@ -11,7 +11,7 @@ rc('text.latex', preamble='\\usepackage[russian]{babel}')
 
 
 def testall(datastoragelen, cachelen, number):
-    alg = ["lru", "mru", "lfu", "fifo", "slru"]
+    alg = ["lru", "mru", "lfu", "fifo", "slru", "rl"]
 
     print("alg".ljust(5), "hit%".ljust(6), "miss%".ljust(6), "time".ljust(6),
           "hitcount".ljust(12), "misscount".ljust(12))
@@ -49,7 +49,8 @@ def plotmissrate(datastoragelen, cachelenstart, steps, number):
 
 
 def plothitrate(datastoragelen, cachelenstart, steps, number):
-    algs, x = [["lru"], ["mru"], ["lfu"], ["fifo"], ["slru"]], []
+    #algs, x = [["lru"], ["mru"], ["lfu"], ["fifo"], ["slru"]], []
+    algs, x = [["lru"], ["mru"], ["lfu"], ["slru"]], []
 
     for _ in range(steps):
         x.append(cachelenstart)
@@ -61,30 +62,35 @@ def plothitrate(datastoragelen, cachelenstart, steps, number):
     line1, = plt.plot(x, algs[0][1:], 'ro--', label='lru')
     line2, = plt.plot(x, algs[1][1:], 'bs--', label='mru')
     line3, = plt.plot(x, algs[2][1:], 'gv--', label='lfu')
-    line4, = plt.plot(x, algs[3][1:], 'cs--', label='fifo')
-    line5, = plt.plot(x, algs[4][1:], 'ms--', label='slru')
+    #line4, = plt.plot(x, algs[3][1:], 'cs--', label='fifo')
+    line5, = plt.plot(x, algs[3][1:], 'ms--', label='slru')
     plt.axis([0, x[-1] + 0.05 * x[-1], 0, 100])
     plt.xlabel("Розмір кешу")
     plt.ylabel("Відсоток кеш-попадань")
-    plt.legend(title="Алгоритм кешування", handles=[line1, line2, line3, line4, line5], numpoints=1)
+    #plt.legend(title="Алгоритм кешування", handles=[line1, line2, line3, line4, line5], numpoints=1)
+    plt.legend(title="Алгоритм кешування", handles=[line1, line2, line3, line5], numpoints=1, loc=4)
     plt.show()
 
 
 def plothitratetimedepend(datastoragelen, cachelenstart, steps, number):
-    algs, x = [["lru"], ["mru"], ["lfu"], ["fifo"], ["slru"]], [number // steps * _ for _ in range(steps + 1) if _ != 0]
+    # algs, x = [["lru"], ["mru"], ["lfu"], ["fifo"], ["slru"], ["rl"]], \
+    #           [number // steps * _ for _ in range(steps + 1) if _ != 0]
+    algs, x = [["lru"], ["mru"], ["lfu"], ["slru"], ["rl"]], \
+              [number // steps * _ for _ in range(steps + 1) if _ != 0]
     for _ in range(len(algs)):
         prmngr = processmanager.Processmanager(datastoragelen, algs[_][0], cachelenstart)
         for __ in range(steps):
             algs[_].append((round(prmngr.setcountmakestephit(number // steps) * 100 / (number // steps), 2)))
 
-    print(algs)
     line1, = plt.plot(x, algs[0][1:], 'ro--', label='lru')
     line2, = plt.plot(x, algs[1][1:], 'bs--', label='mru')
     line3, = plt.plot(x, algs[2][1:], 'gv--', label='lfu')
-    line4, = plt.plot(x, algs[3][1:], 'cs--', label='fifo')
-    line5, = plt.plot(x, algs[4][1:], 'ms--', label='slru')
+    #line4, = plt.plot(x, algs[3][1:], 'cs--', label='fifo')
+    line5, = plt.plot(x, algs[3][1:], 'ms--', label='slru')
+    line6, = plt.plot(x, algs[4][1:], 'ks--', label='rl')
     plt.axis([x[0], x[-1] + 0.05 * x[-1], 0, 100])
     plt.xlabel("Кількість кроків")
     plt.ylabel("Відсоток кеш-попадань")
-    plt.legend(title="Алгоритм кешування", handles=[line1, line2, line3, line4, line5], numpoints=1)
+    #plt.legend(title="Алгоритм кешування", handles=[line1, line2, line3, line4, line5, line6], numpoints=1)
+    plt.legend(title="Алгоритм кешування", handles=[line1, line2, line3, line5, line6], numpoints=1, loc=1)
     plt.show()
