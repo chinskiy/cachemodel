@@ -6,8 +6,8 @@ from controller import lru, mru, lfu, slru, fifo, rl
 
 class Processmanager:
     def __init__(self, memlimit, controller, lencache):
-        random.seed(1)
-        np.random.seed(1)
+        # random.seed(1)
+        # np.random.seed(1)
         self.memlimit, self.lencache = memlimit, lencache
         self.proc = []
         try:

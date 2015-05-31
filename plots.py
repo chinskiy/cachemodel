@@ -71,20 +71,19 @@ def plothitrate(datastoragelen, cachelenstart, steps, number):
 
 
 def plothitratetimedepend(datastoragelen, cachelenstart, steps, number):
-    algs, x = [["lru"], ["mru"], ["lfu"], ["fifo"], ["slru"]], [number // steps * _ for _ in range(steps + 1) if _ != 0]
+    #algs, x = [["lru"], ["mru"], ["lfu"], ["rl"], ["slru"]], [number // steps * _ for _ in range(steps + 1) if _ != 0]
+    algs, x = [["lru"], ["lfu"], ["rl"], ["slru"]], [number // steps * _ for _ in range(steps + 1) if _ != 0]
     for _ in range(len(algs)):
         prmngr = processmanager.Processmanager(datastoragelen, algs[_][0], cachelenstart)
         for __ in range(steps):
             algs[_].append((round(prmngr.setcountmakestephit(number // steps) * 100 / (number // steps), 2)))
-
-    print(algs)
     line1, = plt.plot(x, algs[0][1:], 'ro--', label='lru')
-    line2, = plt.plot(x, algs[1][1:], 'bs--', label='mru')
-    line3, = plt.plot(x, algs[2][1:], 'gv--', label='lfu')
-    line4, = plt.plot(x, algs[3][1:], 'cs--', label='fifo')
-    line5, = plt.plot(x, algs[4][1:], 'ms--', label='slru')
-    plt.axis([x[0], x[-1] + 0.05 * x[-1], 0, 100])
+    #line2, = plt.plot(x, algs[1][1:], 'bs--', label='mru')
+    line3, = plt.plot(x, algs[1][1:], 'gv--', label='lfu')
+    line4, = plt.plot(x, algs[2][1:], 'ks--', label='rl')
+    line5, = plt.plot(x, algs[3][1:], 'ms--', label='slru')
+    plt.axis([x[0], x[-1] + 0.05 * x[-1], 35, 70])
     plt.xlabel("Кількість кроків")
     plt.ylabel("Відсоток кеш-попадань")
-    plt.legend(title="Алгоритм кешування", handles=[line1, line2, line3, line4, line5], numpoints=1)
+    plt.legend(title="Алгоритм кешування", handles=[line1, line3, line5, line4], numpoints=1)
     plt.show()

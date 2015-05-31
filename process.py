@@ -5,11 +5,16 @@ import random
 
 class Process:
     def __init__(self, memlimit):
+        random.seed(1)
+        np.random.seed(1)
         self.memlimit = memlimit
         self.adress = []
-        magicnumber = 4
+        self.popadressnormal(2)
         # big - 2, medium - 4, small - 8
+
+    def popadressnormal(self, magicnumber):
         adresscount = round(np.random.normal(self.memlimit / magicnumber, self.memlimit / (magicnumber * 6)))
+        adresscount = 200
         medium = random.randint(self.memlimit // (magicnumber * 4),
                                 self.memlimit - (self.memlimit // (magicnumber * 4)))
         for _ in range(adresscount):
@@ -22,7 +27,7 @@ class Process:
         print("average ", round(sum(self.adress) / len(self.adress)))
 
     def plotprocesshist(self):
-        plt.hist(self.adress, bins=self.memlimit / 100, range=(0, self.memlimit))
+        plt.hist(self.adress, bins=self.memlimit / 10, range=(0, self.memlimit))
         plt.show()
 
     def popadress(self):
