@@ -2,7 +2,7 @@ import cachestorage
 import numpy as np
 import random
 
-class RL:
+class RLQ:
     def __init__(self, lencache, epsilon=0.08, alpha=0.2, gamma=0.9):
         self.cachestorage = cachestorage.Cachemem(lencache)
         self.start, self.lencache = 0, lencache
@@ -25,12 +25,12 @@ class RL:
         else:
             if index == -1:
                 state = str(adress)
-                if self.stateold != '0':
-                    self.learn(self.stateold, self.actionold, self.reward, state)
-
                 action = self.choose_action(state)
-                self.cachestorage.addmemfromds(action, adress)
 
+                if self.stateold != '0':
+                    self.learnQ(self.stateold, self.actionold, self.reward, state)
+
+                self.cachestorage.addmemfromds(action, adress)
                 self.stateold, self.actionold = state, action
                 self.reward = -1
                 return 0
@@ -55,13 +55,10 @@ class RL:
     def getQ(self, state, action):
         return self.q.get((state, action), 0.0)
 
-    def learn(self, state1, action1, reward, state2):
+    def learnQ(self, state1, action1, reward, state2):
         maxqnew = max([self.getQ(state2, a) for a in self.actions])
-        self.learnQ(state1, action1, reward, reward + self.gamma*maxqnew)
-
-    def learnQ(self, state, action, reward, value):
-        oldv = self.q.get((state, action), 0)
-        if oldv is None:
-            self.q[(state, action)] = reward
+        oldvalue = self.q.get((state1, action1), 0)
+        if oldvalue is None:
+            self.q[(state1, action1)] = reward
         else:
-            self.q[(state, action)] = oldv + self.alpha * (value - oldv)
+            self.q[(state1, action1)] = oldvalue + self.alpha * (reward + self.gamma * maxqnew - oldvalue)
