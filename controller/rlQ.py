@@ -2,6 +2,7 @@ import cachestorage
 import numpy as np
 import random
 
+
 class RLQ:
     def __init__(self, lencache, epsilon=0.08, alpha=0.2, gamma=0.9):
         self.cachestorage = cachestorage.Cachemem(lencache)
@@ -9,7 +10,8 @@ class RLQ:
         self.epsilon, self.alpha, self.gamma = epsilon, alpha, gamma
         self.actions = np.array([_ for _ in range(lencache)])
         self.stateold, self.actionold = '0', '0'
-        self.cachefreq, self.cacheused = [0 for _ in range(lencache)], np.asarray([0 for _ in range(lencache)])
+        self.cachefreq = [0 for _ in range(lencache)]
+        self.cacheused = np.asarray([0 for _ in range(lencache)])
         self.q = {}
         self.reward = 0
 
@@ -28,7 +30,8 @@ class RLQ:
                 action = self.choose_action(state)
 
                 if self.stateold != '0':
-                    self.learnQ(self.stateold, self.actionold, self.reward, state)
+                    self.learnQ(self.stateold, self.actionold, self.reward,
+                                state)
 
                 self.cachestorage.addmemfromds(action, adress)
                 self.stateold, self.actionold = state, action
@@ -61,4 +64,5 @@ class RLQ:
         if oldvalue is None:
             self.q[(state1, action1)] = reward
         else:
-            self.q[(state1, action1)] = oldvalue + self.alpha * (reward + self.gamma * maxqnew - oldvalue)
+            self.q[(state1, action1)] = oldvalue + self.alpha * \
+                (reward + self.gamma * maxqnew - oldvalue)

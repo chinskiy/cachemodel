@@ -23,7 +23,8 @@ class LRU:
                 return 1
         else:
             if index == -1:
-                maxind = np.where(self.cacheused == np.max(self.cacheused))[0][0]
+                maxind = np.where(
+                    self.cacheused == np.max(self.cacheused))[0][0]
                 if retmemid == 0:
                     self.cachestorage.addmemfromds(maxind, adress)
                     self.cacheused += 1

@@ -23,7 +23,8 @@ class SLRU:
                 self.segment[0].cachestorage.memid[index[0]] = tmp
                 self.segment[0].cacheused += 1
                 if tmp == 0:
-                    self.segment[0].cacheused[index[0]] = np.max(self.segment[0].cacheused) + 1
+                    self.segment[0].cacheused[index[0]] = np.max(
+                        self.segment[0].cacheused) + 1
                 else:
                     self.segment[0].cacheused[index[0]] = 0
                 return 1

@@ -26,7 +26,8 @@ class LFU:
         else:
             if index == -1:
                 ind = np.where(self.cachefreq == np.min(self.cachefreq))[0]
-                maxind = np.where(self.cacheused == np.max(self.cacheused[ind]))[0]
+                maxind = np.where(
+                    self.cacheused == np.max(self.cacheused[ind]))[0]
                 self.cachestorage.addmemfromds(maxind, adress)
                 self.cachefreq[maxind] = 0
                 self.cacheused += 1
