@@ -1,14 +1,15 @@
-import cachestorage
 import numpy as np
+from storages.cachestorage import Cachestorage
 
 
-class LRU:
+class LFU:
     def __init__(self, lencache):
-        self.cachestorage = cachestorage.Cachemem(lencache)
+        self.cachestorage = Cachestorage(lencache)
         self.start, self.lencache = 0, lencache
+        self.cachefreq = np.asarray([0 for _ in range(lencache)])
         self.cacheused = np.asarray([0 for _ in range(lencache)])
 
-    def makestep(self, adress, retmemid=0):
+    def makestep(self, adress):
         index = self.cachestorage.findindexaddr(adress)
         if self.start < self.lencache:
             if index == -1:
@@ -20,23 +21,20 @@ class LRU:
             else:
                 self.cacheused += 1
                 self.cacheused[index] = 0
+                self.cachefreq[index] += 1
                 return 1
         else:
             if index == -1:
+                ind = np.where(self.cachefreq == np.min(self.cachefreq))[0]
                 maxind = np.where(
-                    self.cacheused == np.max(self.cacheused))[0][0]
-                if retmemid == 0:
-                    self.cachestorage.addmemfromds(maxind, adress)
-                    self.cacheused += 1
-                    self.cacheused[maxind] = 0
-                    return 0
-                else:
-                    tmp = self.cachestorage.memid[maxind]
-                    self.cachestorage.addmemfromds(maxind, adress)
-                    self.cacheused += 1
-                    self.cacheused[maxind] = 0
-                    return tmp
+                    self.cacheused == np.max(self.cacheused[ind]))[0]
+                self.cachestorage.addmemfromds(maxind, adress)
+                self.cachefreq[maxind] = 0
+                self.cacheused += 1
+                self.cacheused[maxind] = 0
+                return 0
             else:
+                self.cachefreq[index] += 1
                 self.cacheused += 1
                 self.cacheused[index] = 0
                 return 1

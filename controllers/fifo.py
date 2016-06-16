@@ -1,9 +1,9 @@
-import cachestorage
+from storages.cachestorage import Cachestorage
 
 
 class FIFO:
     def __init__(self, lencache):
-        self.cachestorage = cachestorage.Cachemem(lencache)
+        self.cachestorage = Cachestorage(lencache)
         self.lencache = lencache
         self.iter = 0
 

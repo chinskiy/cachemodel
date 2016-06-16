@@ -1,7 +1,7 @@
 import process
 import random
 import numpy as np
-from controller import lru, mru, lfu, slru, fifo, rlQ, rlS
+from controllers import lru, mru, lfu, slru, fifo, rlQ, rlS
 
 
 class Processmanager:

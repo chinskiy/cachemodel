@@ -1,4 +1,4 @@
-import controller.lru as lru
+import lru
 import numpy as np
 
 

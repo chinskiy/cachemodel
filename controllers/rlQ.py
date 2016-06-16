@@ -1,11 +1,11 @@
-import cachestorage
-import numpy as np
 import random
+import numpy as np
+from storages.cachestorage import Cachestorage
 
 
 class RLQ:
     def __init__(self, lencache, epsilon=0.08, alpha=0.2, gamma=0.9):
-        self.cachestorage = cachestorage.Cachemem(lencache)
+        self.cachestorage = Cachestorage(lencache)
         self.start, self.lencache = 0, lencache
         self.epsilon, self.alpha, self.gamma = epsilon, alpha, gamma
         self.actions = np.array([_ for _ in range(lencache)])
@@ -30,8 +30,8 @@ class RLQ:
                 action = self.choose_action(state)
 
                 if self.stateold != '0':
-                    self.learnQ(self.stateold, self.actionold, self.reward,
-                                state)
+                    self.learnQ(self.stateold, self.actionold,
+                                self.reward, state)
 
                 self.cachestorage.addmemfromds(action, adress)
                 self.stateold, self.actionold = state, action

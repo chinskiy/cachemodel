@@ -1,9 +1,9 @@
-import cachestorage
+from storages.cachestorage import Cachestorage
 
 
 class MRU:
     def __init__(self, lencache):
-        self.cachestorage = cachestorage.Cachemem(lencache)
+        self.cachestorage = Cachestorage(lencache)
         self.start, self.lencache = 0, lencache
         self.lastadd = -1
 
