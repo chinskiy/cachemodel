@@ -1,6 +1,5 @@
 from storages.cachestorage import Cachestorage
 
-
 class FIFO:
     def __init__(self, lencache):
         self.cachestorage = Cachestorage(lencache)
