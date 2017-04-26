@@ -9,7 +9,7 @@ message:  # Customize the comment made by the bot
         footer: ""  # Why to comment the link to the style guide everytime? :)
 
 scanner:
-    diff_only: False  # If True, errors caused by only the patch are shown
+    diff_only: True  # If True, errors caused by only the patch are shown
 
 pycodestyle:
     max-line-length: 100  # Default is 79 in PEP8
