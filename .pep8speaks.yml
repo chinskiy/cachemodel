@@ -5,7 +5,7 @@ message:  # Customize the comment made by the bot
         footer: "Do see the [Hitchhiker's guide to code style](https://goo.gl/hqbW4r)"
                 # The messages can be written as they would over GitHub
     updated:  # Messages when new commits are added to the PR
-        header: "Greetings @{name}, Thank you for updating !"
+        header: "Hi @{name}, Thank you for updating !"
         footer: ""  # Why to comment the link to the style guide everytime? :)
 
 scanner:
